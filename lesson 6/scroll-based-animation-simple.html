@@ -1,0 +1,76 @@
+<head>
+  <style>
+    .content {
+      height: 3000px;
+    }
+
+    .box1 {
+      left: 0;
+      top: 50%;
+
+      background: #333333;
+      color: white;
+      padding: 20px;
+
+      position: fixed;
+    }
+
+    .box2 {
+      left: 90%;
+      top: 20%;
+
+      background: blue;
+      color: white;
+      padding: 20px;
+
+      position: fixed;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1>
+      here's the top of the page
+    </h1>
+
+    <div class="box1">
+      box 1
+    </div>
+
+    <div class="box2">
+      box 2
+    </div>
+  </div>
+
+  <script>
+    // window.pageYOffset - show offset from the top
+
+    var prevYOffset = 0;
+    var contentHeight = 3000;
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+
+    var box1El = document.querySelector(".box1")
+    var box2El = document.querySelector(".box2")
+
+    function loop() {
+      requestAnimationFrame(loop)
+
+      if (prevYOffset != window.pageYOffset) {
+        var scrollPercentage = pageYOffset / (contentHeight - windowHeight)
+
+        if (scrollPercentage > 0.2) {
+          box1El.style.left = (scrollPercentage - 0.2) / 0.4 * windowWidth
+        }
+
+
+        box2El.style.left = (1 - scrollPercentage) * windowWidth
+
+        prevYOffset = window.pageYOffset;
+      }
+
+    }
+
+    requestAnimationFrame(loop)
+  </script>
+</body>
