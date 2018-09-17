@@ -1,0 +1,43 @@
+<head>
+  <title>lesson 8</title>
+
+  <script src="paper-full.js"></script>
+</head>
+
+<body>
+  <canvas width=600 height=600></canvas>
+
+  <script>
+  var canvas = document.querySelector("canvas")
+
+  paper.setup(canvas)
+
+  var rectWidth = 40
+  var rectHeight = 6
+
+  var size = new paper.Size(rectWidth, rectHeight)
+  var marginTop = 10
+  var marginLeft = 2
+  var numRows = 20
+  var numCols = 20
+
+  for (var i = 0; i < numRows; i = i + 1) {
+    for (var j = 0; j < numCols; j = j + 1) {
+      var x = 10 + j * (rectWidth + marginLeft)
+      var y = 10 + i * (rectHeight + marginTop)
+
+      var point = new paper.Point(x, y)
+
+      var rect = new paper.Path.Rectangle({
+        point: point,
+        size: size,
+        fillColor: "black"
+      })
+
+      var angle = Math.sin(j / numCols * Math.PI * 2) * 30 - 20
+
+      rect.rotate(angle)
+    }
+  }
+  </script>
+</body>

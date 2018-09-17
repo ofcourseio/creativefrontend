@@ -1,0 +1,56 @@
+<head>
+  <title>Lesson 3</title>
+
+  <script>
+    var artists = []
+
+    artists.push({
+      name: "Pablo Picasso",
+      age: 91,
+      bornYear: 1881,
+      numberOfWorks: 50000
+    })
+
+    artists.push({
+      name: "Leonardo Da Vinci",
+      age: 67,
+      bornYear: 1452,
+      numberOfWorks: 30
+    })
+
+    artists.push({
+      name: "Claude Monet",
+      age: 86,
+      bornYear: 1840,
+      numberOfWorks: 2500
+    })
+
+    function calculateDyingYear(artist) {
+      var dyingYear = artist.bornYear + artist.age
+      return dyingYear
+    }
+
+    function calculateYearlyWorks(artist) {
+      var yearlyWorks = artist.numberOfWorks / artist.age
+      return yearlyWorks
+    }
+
+    for (var i = 0; i < artists.length; i = i + 1) {
+      var artist = artists[i]
+
+      var dyingYear = calculateDyingYear(artist)
+      var yearlyWorks = calculateYearlyWorks(artist)
+
+      console.log(
+        artist.name + " lived to be " + artist.age +
+        " died in " + dyingYear +
+        " created " + yearlyWorks +
+        " works per year on average"
+      )
+
+      if (yearlyWorks > 1) {
+        console.log("and created more than one work a year!")
+      }
+    }
+  </script>
+</head>

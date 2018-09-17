@@ -1,0 +1,144 @@
+<head>
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+
+  <style>
+  body {
+    margin: 0
+  }
+  </style>
+</head>
+<body>
+  <script>
+  var camera
+  var scene
+  var renderer
+  var controls
+
+  var meshes = []
+
+  function lerp(a, b, k) {
+    return a * (1 - k) + b * k
+  }
+
+  function lerpArray(a, b, k) {
+    var output = []
+
+    for (var i = 0; i < a.length; i = i + 1) {
+      output[i] = lerp(a[i], b[i], k)
+    }
+
+    return output
+  }
+
+  function makeCube(x, y, z) {
+    var material = new THREE.MeshPhongMaterial({
+      color: 0x223388,
+      specular: 0xffffff,
+      shininess: 10
+    })
+
+    var geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1)
+    var mesh = new THREE.Mesh(geometry, material)
+
+    mesh.position.set(x, y, z)
+
+    return mesh
+
+  }
+
+  function setup() {
+    camera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      0.01,
+      100
+    )
+
+    camera.position.z = 2.0
+
+    controls = new THREE.OrbitControls(camera)
+    controls.autoRotate = true
+
+    scene = new THREE.Scene()
+
+    for (var i = -3; i < 3; i = i + 1) {
+      for (var j = -3; j < 3; j = j + 1) {
+        for (var k = -3; k < 3; k = k + 1) {
+          var cube = makeCube(i, j, k)
+
+          meshes.push({
+            mesh: cube,
+
+            targetRotation: [
+              Math.random(),
+              Math.random(),
+              Math.random()
+            ],
+            startRotation: [0,0,0],
+
+            targetScale: [
+              Math.random() * 5,
+              Math.random() * 5,
+              Math.random() * 5
+            ],
+            startScale: [0,0,0],
+          })
+
+          scene.add(cube)
+        }
+      }
+    }
+
+    light = new THREE.PointLight(0xffffff)
+    light.position.set(0, 0, 20)
+    scene.add(light)
+
+    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+  }
+
+  var x = 0
+  function draw() {
+    renderer.render(scene, camera)
+
+    x = x + 0.01
+
+    for (var i = 0; i < meshes.length; i = i + 1) {
+      var mesh = meshes[i].mesh
+
+      var currentRotation = lerpArray(
+        meshes[i].startRotation,
+        meshes[i].targetRotation,
+        (Math.sin(x) + 1) / 2
+      )
+
+      var currentScale = lerpArray(
+        meshes[i].startScale,
+        meshes[i].targetScale,
+        (Math.sin(x) + 1) / 2
+      )
+
+      mesh.rotation.set(
+        currentRotation[0],
+        currentRotation[1],
+        currentRotation[2]
+      )
+
+      mesh.scale.set(
+        currentScale[0],
+        currentScale[1],
+        currentScale[2]
+      )
+    }
+
+    controls.update()
+
+    requestAnimationFrame(draw)
+  }
+
+  setup()
+  draw()
+  </script>
+</body>

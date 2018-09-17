@@ -1,0 +1,230 @@
+<head>
+  <script src="three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,500" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.4/TweenMax.min.js"></script>
+
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif
+  }
+
+  .content {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    right: 0;
+  }
+
+  .content.about-active .logo {
+    transform: translate(0, -160px);
+  }
+
+  .content.about-active .about-btn {
+    opacity: 0;
+  }
+
+  .logo {
+    text-align: center;
+    font-size: 60px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin-top: 200px;
+    color: #444444;
+
+    animation-name: fade-in-header;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+
+    transition: transform 500ms;
+  }
+
+  @keyframes fade-in-header {
+    0% {
+      opacity: 0;
+      transform: translate(0, 40px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  .about-btn {
+    text-align: center;
+    cursor: pointer;
+
+    color: #777777;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-top: 20px;
+
+    animation-name: fade-in-about;
+    animation-duration: 3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+
+    transition: opacity 500ms;
+  }
+
+  @keyframes fade-in-about {
+    0% {
+      opacity: 0;
+      transform: translate(0, 20px);
+    }
+
+    30% {
+      opacity: 0;
+      transform: translate(0, 20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+  </style>
+</head>
+
+<body>
+  <div class="content">
+    <div class="logo">
+      CREATIVE FRONTEND
+    </div>
+
+    <div class="about-btn">about</div>
+  </div>
+
+  <script>
+  var camera
+  var scene
+  var renderer
+
+  var numRows = 100
+  var numColumns = 100
+
+  var particles = []
+  var particleGroup = new THREE.Object3D()
+
+  function setup() {
+    camera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      0.01,
+      100
+    )
+
+    camera.position.z = 6
+    camera.position.y = 6
+
+    scene = new THREE.Scene()
+
+    var material = new THREE.SpriteMaterial({
+      color: 0x333333
+    })
+
+    for (var i = 0; i < numColumns; i = i + 1) {
+      for (var j = 0; j < numRows; j = j + 1) {
+        var x = i - numColumns / 2
+        var z = j - numRows / 2
+
+        var sprite = new THREE.Sprite(material)
+        sprite.position.set(x, 0, z)
+
+        sprite.scale.set(0.0, 0.0, 0.0)
+
+        sprite.animationMax = 0.0
+
+        TweenMax.to(sprite.scale, (1 - j / numRows) * 10.0 + 2.0, {
+          x: 0.05,
+          y: 0.05,
+          z: 0.05
+        })
+
+        TweenMax.to(sprite, (1 - i / numColumns) * 10.0 + 20.0, {
+          animationMax: 1.0
+        })
+
+        particleGroup.add(sprite)
+        particles.push(sprite)
+      }
+    }
+
+    scene.add(particleGroup)
+
+    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setClearColor(0xffffff)
+
+    renderer.domElement.style.position = 'absolute'
+    renderer.domElement.style.top = 0
+    renderer.domElement.style.left = 0
+    document.body.appendChild(renderer.domElement)
+  }
+
+  var x = 0;
+
+  function draw() {
+    renderer.render(scene, camera)
+
+    x = x + 0.04
+
+    var idx = 0
+    for (var i = 0; i < numRows; i = i + 1) {
+      for (var j = 0; j < numColumns; j = j + 1) {
+        var particle = particles[idx]
+
+        particle.position.y =
+          (Math.sin((x + i) * 0.2) * 2 + Math.cos((x + j) * 0.23))
+           * particle.animationMax
+
+        idx = idx + 1
+      }
+    }
+
+    requestAnimationFrame(draw)
+  }
+
+  setup()
+  draw()
+
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+
+    renderer.setSize(window.innerWidth, window.innerHeight)
+  }
+
+  window.addEventListener("resize", onWindowResize)
+
+  var aboutButtonEl = document.querySelector(".about-btn")
+  var contentEl = document.querySelector(".content")
+
+  function hideAboutButton() {
+    aboutButtonEl.style.display = "none"
+  }
+
+  function aboutButtonClicked() {
+    contentEl.className = "content about-active"
+
+    setTimeout(hideAboutButton, 500)
+
+    TweenMax.to(particleGroup.rotation, 3, {
+      x: -0.3,
+      y: 0,
+      z: 0
+    })
+
+    TweenMax.to(particleGroup.position, 6, {
+      x: 0,
+      y: -3,
+      z: 0
+    })
+  }
+
+  aboutButtonEl.addEventListener("click", aboutButtonClicked)
+  </script>
+</body>

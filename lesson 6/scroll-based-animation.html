@@ -1,0 +1,145 @@
+<head>
+  <style>
+  body {
+    margin: 0;
+  }
+
+  .content {
+    height: 3000px;
+    background-color: #594F4F;
+  }
+
+  .slide-from-left {
+    position: fixed;
+    top: 100px;
+    left: 0;
+
+    background-color: #45ADA8;
+    border-bottom: 2px solid #547980;
+
+    padding: 30px;
+
+    font-family: Helvetica;
+    font-size: 32px;
+    color: #E5FCC2;
+  }
+
+  .slide-from-right {
+    position: fixed;
+    top: 300px;
+    left: 0;
+
+    background-color: #45ADA8;
+    border-bottom: 2px solid #547980;
+
+    padding: 30px;
+
+    font-family: Helvetica;
+    font-size: 32px;
+    color: #E5FCC2;
+  }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <span class="slide-from-left">
+      Hello!
+    </span>
+
+    <span class="slide-from-right">
+      OFCourse!
+    </span>
+  </div>
+
+  <script>
+  var animationConfig = {
+    ".slide-from-left": {
+      "0%": 1000,
+      "5%": 1000,
+      "80%": -200,
+      "100%": -200
+    },
+
+    ".slide-from-right": {
+      "0%": -300,
+      "20%": -300,
+      "50%": 200,
+      "70%": 200,
+      "100%": -300
+    }
+  }
+
+  var domElements = {}
+
+  var classNames = Object.keys(animationConfig)
+
+  for (var i = 0; i < classNames.length; i = i + 1) {
+    var className = classNames[i]
+    var matchingEl = document.querySelector(className)
+
+    domElements[className] = matchingEl
+  }
+
+  function updateSingleElement(className, scrollPercentage) {
+    var elementConfig = animationConfig[className]
+
+    var percentages = Object.keys(elementConfig)
+
+    var matched = -1
+
+    for (var i = 0; i < percentages.length; i = i + 1) {
+      var percentage = percentages[i]
+      var numPercentage = parseInt(percentage.replace("%", ""))
+
+      if (matched < 0 && numPercentage >= scrollPercentage) {
+        matched = i;
+      }
+    }
+
+    if (matched > 0) {
+      var fromIndex = matched - 1;
+      var toIndex = matched;
+
+      var fromPercentage = percentages[fromIndex]
+      var toPercentage = percentages[toIndex]
+
+      var fromPercentageNum = parseInt(fromPercentage.replace("%", ""))
+      var toPercentageNum = parseInt(toPercentage.replace("%", ""))
+
+      var fromPositionX = elementConfig[fromPercentage]
+      var toPositionX = elementConfig[toPercentage]
+
+      var scaling = (scrollPercentage - fromPercentageNum) /
+        (toPercentageNum - fromPercentageNum)
+
+      var finalPositionX = fromPositionX + (toPositionX - fromPositionX) * scaling;
+
+      domElements[className].style.transform = "translate(" + finalPositionX + "px, 0)"
+    }
+  }
+
+  function updateAnimationElements(scrollPercentage) {
+    var classNames = Object.keys(animationConfig)
+
+    for (var i = 0; i < classNames.length; i = i + 1) {
+      updateSingleElement(classNames[i], scrollPercentage)
+    }
+  }
+
+  var contentEl = document.querySelector(".content")
+
+  function windowScrollPercentage() {
+    return window.pageYOffset / (contentEl.clientHeight - window.innerHeight) * 100
+  }
+
+  function update() {
+    var scrollPercentage = windowScrollPercentage()
+
+    updateAnimationElements(scrollPercentage)
+
+    requestAnimationFrame(update)
+  }
+
+  requestAnimationFrame(update)
+  </script>
+</body>

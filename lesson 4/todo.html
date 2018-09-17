@@ -1,0 +1,86 @@
+<head>
+  <title>TODO</title>
+</head>
+
+<body>
+  <div>
+    <input class="todo-name"></input>
+    <button class="add-todo">add todo</button>
+  </div>
+
+  <div>
+    <ol class="todo-list">
+      <li>This shouldn't show up</li>
+    </ol>
+  </div>
+
+  <script>
+    var inputElement = document.querySelector(".todo-name")
+    var addTodoButton = document.querySelector(".add-todo")
+    var todoListElement = document.querySelector(".todo-list")
+    var doneButtons = document.querySelectorAll(".done")
+
+    var todos = [
+      "buy milk",
+      "finish recording lesson",
+      "rest"
+    ]
+
+    function addTodoItemToDOM(todoText, index) {
+      todoListElement.innerHTML = todoListElement.innerHTML +
+        "<li>" + todoText + "</li> " +
+        "<button data-index=" + index + " class='done'>done</button>"
+    }
+
+    function addTodoFromInput() {
+      todos.push(inputElement.value)
+
+      draw()
+    }
+
+    addTodoButton.addEventListener("click", addTodoFromInput)
+
+    function markTodoAsDone(event) {
+      var targetElement = event.target
+      var indexAttribute = targetElement.getAttribute("data-index")
+
+      var newTodos = []
+
+      for (var i = 0; i < todos.length; i = i + 1) {
+        var todo = todos[i]
+
+        if (i != indexAttribute) {
+          newTodos.push(todo)
+        }
+      }
+
+      todos = newTodos
+
+      draw()
+    }
+
+    function draw() {
+      for (var i = 0; i < doneButtons.length; i = i + 1) {
+        var doneButton = doneButtons[i]
+        doneButton.removeEventListener("click", markTodoAsDone)
+      }
+
+      todoListElement.innerText = ""
+
+      for (var i = 0; i < todos.length; i = i + 1) {
+        var todo = todos[i]
+
+        addTodoItemToDOM(todo, i)
+      }
+
+      doneButtons = document.querySelectorAll(".done")
+
+      for (var i = 0; i < doneButtons.length; i = i + 1) {
+        var doneButton = doneButtons[i]
+        doneButton.addEventListener("click", markTodoAsDone)
+      }
+    }
+
+    draw()
+  </script>
+</body>

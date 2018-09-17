@@ -1,0 +1,41 @@
+<head>
+  <title>lesson 8</title>
+
+  <script src="paper-full.js"></script>
+</head>
+
+<body>
+  <canvas width=600 height=600></canvas>
+
+  <script>
+  var canvas = document.querySelector("canvas")
+
+  paper.setup(canvas)
+
+  function rand(min, max) {
+    var r = Math.random();
+    return min + r * (max - min);
+  }
+
+  var lastX = 0
+  var margin = 5
+
+  while (lastX < 600) {
+    var x = lastX
+    var y = rand(0, 200)
+    var w = rand(10, 80)
+    var h = rand(200, 400)
+
+    var point = new paper.Point(x, y)
+    var size = new paper.Size(w, h)
+
+    var rect = new paper.Path.Rectangle({
+      point: point,
+      size: size,
+      fillColor: "black"
+    })
+
+    lastX = x + w + margin
+  }
+  </script>
+</body>

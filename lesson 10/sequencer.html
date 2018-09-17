@@ -1,0 +1,102 @@
+<head>
+  <script src="Tone.js"></script>
+  <script src="p5.js"></script>
+</head>
+
+<body>
+  <script>
+  var numRows = 10
+  var numCols = 10
+
+  var rectSize = 50
+  var margin = 5
+
+  var activeStep = 0
+  var stepTime = 200
+  var lastStepUpdate = 0
+
+  var state = []
+
+  for (var i = 0; i < numRows; i = i + 1) {
+    for (var j = 0; j < numCols; j = j + 1) {
+      if (j == 0) {
+        state[i] = []
+      }
+
+      state[i][j] = false
+    }
+  }
+
+  var synth = new Tone.PolySynth(numRows)
+  synth.toMaster()
+
+  var notes = [ "c2", "d2", "e2", "f2", "g2", "a3", "b3", "c3", "d3", "e3" ]
+
+  function setup() {
+    createCanvas(600, 600)
+    noStroke()
+  }
+
+  function draw() {
+    background(255)
+
+    for (var i = 0; i < numRows; i = i + 1) {
+      for (var j = 0; j < numCols; j = j + 1) {
+        var x = i * (rectSize + margin)
+        var y = j * (rectSize + margin)
+        var buttonState = state[i][j]
+
+        if (activeStep == i) {
+          if (buttonState == true) {
+            fill(240, 100, 100)
+          }
+          else {
+            fill(140)
+          }
+        }
+        else {
+          if (buttonState == true) {
+            fill(200, 100, 100)
+          }
+          else {
+            fill(200)
+          }
+        }
+
+        rect(x, y, rectSize, rectSize)
+      }
+    }
+
+    if (millis() - lastStepUpdate > stepTime) {
+      activeStep = activeStep + 1
+      if (activeStep >= numRows) {
+        activeStep = 0
+      }
+
+      for (var i = 0; i < numRows; i = i + 1) {
+        var activeStepState = state[activeStep]
+
+        if (activeStepState[i] == true) {
+          var note = notes[i]
+
+          synth.triggerAttackRelease(note, 0.5)
+        }
+      }
+
+      lastStepUpdate = millis()
+    }
+  }
+
+  function mouseClicked() {
+    var gridX = Math.floor(mouseX / (rectSize + margin))
+    var gridY = Math.floor(mouseY / (rectSize + margin))
+
+    if (state[gridX][gridY] == true) {
+      state[gridX][gridY] = false
+    }
+    else {
+      state[gridX][gridY] = true
+    }
+  }
+  </script>
+</body>

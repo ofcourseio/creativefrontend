@@ -1,0 +1,28 @@
+<head>
+  <title>OFCourse Lesson 4</title>
+</head>
+
+<body>
+  <div>
+    <button class="say-hello">Say Hello!</button>
+
+    <h1 class="header">
+    </h1>
+
+    <div>
+      This should still be here.
+    </div>
+  </div>
+
+  <script>
+    var h1Element = document.querySelector(".header")
+
+    function sayHello() {
+      h1Element.innerText = "HELLO OFCOURSE"
+    }
+
+    var buttonElement = document.querySelector(".say-hello")
+
+    buttonElement.addEventListener("click", sayHello)
+  </script>
+</body>

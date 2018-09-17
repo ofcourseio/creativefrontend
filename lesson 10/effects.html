@@ -1,0 +1,49 @@
+<head>
+  <script src="Tone.js"></script>
+</head>
+
+<body>
+  <script>
+  /*
+    start local server: python -m SimpleHTTPServer 8000
+    then open browser to: http://0.0.0.0:8000
+  */
+
+  function rand(min, max) {
+    return Math.random() * (max - min) + min
+  }
+
+  var synth = new Tone.PolySynth(12)
+  var synthGain = new Tone.Gain(0.75)
+  synthGain.toMaster()
+  synth.connect(synthGain)
+
+  var pingPongDelay = new Tone.PingPongDelay("4n", 0.5)
+  var pingPongDelayGain = new Tone.Gain(0.5)
+  pingPongDelayGain.toMaster()
+  pingPongDelay.connect(pingPongDelayGain)
+
+  var distortion = new Tone.Distortion(1)
+  var distortionGain = new Tone.Gain(0.25)
+
+  distortionGain.toMaster()
+  distortion.connect(distortionGain)
+  synth.connect(distortion)
+
+  distortion.connect(pingPongDelay)
+
+  function polySoundHigh(time) {
+    var octave = Math.round(rand(4, 6))
+
+    synth.triggerAttackRelease("c" + octave, 0.5, time)
+    synth.triggerAttackRelease("e" + octave, 0.5, time + 1.0)
+    synth.triggerAttackRelease("g" + octave, 0.5, time + 2.0)
+  }
+
+  var loopHigh = new Tone.Loop(polySoundHigh, 3.0)
+  loopHigh.start()
+
+  Tone.Transport.start()
+
+  </script>
+</body>

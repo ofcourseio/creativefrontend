@@ -1,0 +1,81 @@
+<head>
+  <script src="p5.js"></script>
+  <script src="p5.dom.js"></script>
+</head>
+<body>
+  <script>
+  function randomColor() {
+    var hue = Math.round(random(0, 360))
+    var brightness = "100%"
+    var saturation = "80%"
+
+    return "hsb(" + hue + ", " + brightness + ", " + saturation + ")"
+  }
+
+  function makeBall() {
+    return {
+      x: random(250, 350),
+      y: random(250, 350),
+      speed: random(1, 4),
+      color: randomColor()
+    }
+  }
+
+  var balls = []
+  var numBalls = 1000
+
+  var sliderNoiseScale
+  var sliderMillisScale
+  var sliderAlphaValue
+
+  function setup() {
+    createCanvas(600, 600)
+    noStroke()
+
+    for (var i = 0; i < numBalls; i = i + 1) {
+      balls.push(makeBall())
+    }
+
+    sliderNoiseScale = createSlider(1, 1000)
+    sliderNoiseScale.position(10, 10)
+
+    sliderMillisScale = createSlider(1, 1000)
+    sliderMillisScale.position(10, 50)
+
+    sliderAlphaValue = createSlider(1, 10)
+    sliderAlphaValue.position(10, 90)
+  }
+
+  function draw() {
+    background(250, 250, 250, sliderAlphaValue.value())
+
+    for (var i = 0; i < numBalls; i = i + 1) {
+      var ball = balls[i]
+
+      fill(ball.color)
+      ellipse(ball.x, ball.y, 2, 2)
+
+      var noiseScale = sliderNoiseScale.value() / 10000
+      var millisScale = sliderMillisScale.value() / 100000
+
+      var noiseValue = noise(
+        ball.x * noiseScale,
+        ball.y * noiseScale,
+        millis() * millisScale
+      )
+
+      var angle = noiseValue * 360
+
+      var vector = p5.Vector.fromAngle(radians(angle), 1)
+
+      ball.x = ball.x + vector.x
+      ball.y = ball.y + vector.y
+
+      if (ball.x > 600 || ball.x < 0 || ball.y > 600 || ball.y < 0) {
+        ball.x = random(250, 350)
+        ball.y = random(250, 350)
+      }
+    }
+  }
+  </script>
+</body>

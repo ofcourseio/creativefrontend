@@ -1,0 +1,56 @@
+<head>
+  <title>lesson 8</title>
+
+  <script src="paper-full.js"></script>
+</head>
+
+<body>
+  <canvas width=600 height=600></canvas>
+
+  <script>
+  var canvas = document.querySelector("canvas")
+
+  paper.setup(canvas)
+
+  var colors = [
+    "#EEE6AB",
+    "#C5BC8E",
+    "#696758",
+    "#45484B",
+    "#36393B"
+  ]
+
+  function randomColor() {
+    var randomIndex = Math.random() * colors.length
+    var roundIndex = Math.floor(randomIndex)
+
+    var color = colors[roundIndex]
+
+    return color
+  }
+
+  var numArcs = 90
+
+  for (var i = 0; i < numArcs; i = i + 1) {
+    var r = 50 + i * 6
+    var x = 300 - r / 2
+    var y = 300 - r / 2
+
+    var rotationCenter = new paper.Point(300, 300)
+
+    var from = new paper.Point(x, y)
+    var through = new paper.Point(x + r, y)
+    var to = new paper.Point(x, y + r)
+
+    var arc = new paper.Path.Arc(from, through, to)
+
+    arc.strokeColor = randomColor()
+    arc.strokeWidth = 2
+
+    var angle = Math.random() * 180
+
+    arc.rotate(angle, rotationCenter)
+  }
+
+  </script>
+</body>

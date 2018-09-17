@@ -1,0 +1,98 @@
+<head>
+  <script src="three.min.js"></script>
+
+  <style>
+  body {
+    margin: 0
+  }
+  </style>
+</head>
+<body>
+  <script>
+  var camera
+  var scene
+  var renderer
+
+  var meshes = []
+
+  function makeMesh(material, position) {
+    var geometry = new THREE.DodecahedronGeometry(0.2)
+    var mesh = new THREE.Mesh(geometry, material)
+
+    mesh.position.set(position, 0, 0)
+
+    return mesh
+  }
+
+  function setup() {
+    camera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      0.01,
+      100
+    )
+
+    camera.position.z = 1.2
+
+    scene = new THREE.Scene()
+
+    var normalMesh = makeMesh(new THREE.MeshNormalMaterial(), -0.75)
+    meshes.push(normalMesh)
+    scene.add(normalMesh)
+
+    var lambertMesh = makeMesh(
+      new THREE.MeshLambertMaterial({ color: 0x223388 }),
+      -0.25
+    )
+    meshes.push(lambertMesh)
+    scene.add(lambertMesh)
+
+    var phongMesh = makeMesh(
+      new THREE.MeshPhongMaterial({
+        color: 0x223388,
+        specular: 0xffffff,
+        shininess: 10
+      }),
+      0.25
+    )
+    meshes.push(phongMesh)
+    scene.add(phongMesh)
+
+    var standardMesh = makeMesh(
+      new THREE.MeshStandardMaterial({
+        color: 0x223388,
+        roughness: 0.0,
+        metalness: 0.0
+      }),
+      0.75
+    )
+    meshes.push(standardMesh)
+    scene.add(standardMesh)
+
+    light = new THREE.PointLight(0xffffff)
+    light.position.set(0, 0, 10)
+    scene.add(light)
+
+    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    document.body.appendChild(renderer.domElement)
+  }
+
+  function draw() {
+    renderer.render(scene, camera)
+
+    for (var i = 0; i < meshes.length; i = i + 1) {
+      var mesh = meshes[i]
+
+      mesh.rotation.x = mesh.rotation.x + 0.01
+      mesh.rotation.y = mesh.rotation.y - 0.02
+    }
+
+
+    requestAnimationFrame(draw)
+  }
+
+  setup()
+  draw()
+  </script>
+</body>

@@ -1,0 +1,107 @@
+<head>
+  <style>
+  body {
+    background-color: rgba(230, 230, 230, 1.0);
+  }
+
+  canvas {
+    display: block;
+    margin: 0 auto;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas class="drawing" width=500 height=500></canvas>
+
+  <script>
+    var canvasEl = document.querySelector(".drawing")
+    var context = canvasEl.getContext("2d")
+
+    function onMouseMove(e) {
+      console.log(e.clientX, e.clientY)
+    }
+
+    canvasEl.addEventListener("mousemove", onMouseMove)
+
+    var width = 500
+    var height = 500
+
+    function rand(min, max) {
+      return min + Math.random() * (max - min)
+    }
+
+    function createBall() {
+      var ball = {
+        x: rand(0, width),
+        y: rand(0, height),
+        vx: rand(-2, 2),
+        vy: rand(-2, 2),
+        r: 2
+      }
+
+      return ball
+    }
+
+    var balls = []
+
+    for (var i = 0; i < 1000; i = i + 1) {
+      balls.push(createBall())
+    }
+
+    function distance(a, b) {
+      var x = a.x - b.x
+      var y = a.y - b.y
+
+      return Math.sqrt(x * x + y * y)
+    }
+
+    function updateBall(ball) {
+      if (ball.y - ball.r / 2 < 0)      { ball.vy = -ball.vy }
+      if (ball.x - ball.r / 2 < 0)      { ball.vx = -ball.vx }
+      if (ball.y + ball.r / 2 > height) { ball.vy = -ball.vy }
+      if (ball.x + ball.r / 2 > width)  { ball.vx = -ball.vx }
+
+      for (var i = 0; i < balls.length; i = i + 1) {
+        var otherBall = balls[i]
+        var d = distance(ball, otherBall)
+
+        if (d > 0 && d < 10) {
+          var dx = ball.x - otherBall.x
+          var dy = ball.y - otherBall.y
+
+          ball.vx = ball.vx + dx * 0.01
+          ball.vy = ball.vy + dy * 0.01
+        }
+      }
+
+      ball.y = ball.y + ball.vy
+      ball.x = ball.x + ball.vx
+
+      ball.vx = ball.vx * 0.99
+      ball.vy = ball.vy * 0.99
+    }
+
+    function draw() {
+      context.fillStyle = "white"
+      context.fillRect(0, 0, 500, 500)
+
+      context.fillStyle = "#4E395D"
+      context.strokeStyle = "#8EBE94"
+
+      for (var i = 0; i < balls.length; i = i + 1) {
+        var ball = balls[i]
+
+        updateBall(ball)
+
+        context.beginPath()
+        context.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2)
+        context.fill()
+      }
+
+      requestAnimationFrame(draw)
+    }
+
+    draw()
+  </script>
+</body>

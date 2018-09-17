@@ -1,0 +1,109 @@
+<head>
+  <title>OFCourse -- lesson 2</title>
+
+  <style>
+  /*
+    TAG { STYLES }
+    .CLASS { STYLES }
+  */
+
+  body {
+    margin: 0;
+    background-color: rgb(240, 240, 240);
+  }
+
+  .content {
+    color: rgb(80, 80, 80);
+    background-color: rgb(220, 220, 220);
+    font-family: Helvetica; /* Arial, Tahoma */
+
+    width: 400px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 20px;
+    padding-top: 30px;
+    border-bottom: 1px solid rgb(200, 200, 200);
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+
+  .content {
+    font-size: 12px;
+    padding-bottom: 40px;
+  }
+
+  .section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 140px;
+  }
+
+  .section-image {
+    width: 120px;
+    border: 10px solid rgb(250, 250, 250);
+  }
+
+  .section-description {
+    display: inline-block;
+    width: 200px;
+    margin-left: 20px;
+    margin-top: 40px;
+    font-size: 10px;
+  }
+
+  .section-image {
+    float: left;
+  }
+
+  .footer {
+    position: fixed;
+
+    bottom: 10px;
+    left: 0;
+    right: 0;
+
+    text-align: center;
+
+    font-family: Helvetica;
+    font-size: 8px;
+    color: rgb(80,80,80);
+  }
+  </style>
+</head>
+
+<body>
+  <div class="content">
+    <div class="header">
+      OFCourse Creative Coding!
+    </div>
+
+    <div class="info">
+      This course is all about HTML, CSS and JavaScript
+
+      <div class="section">
+        <div class="section-description">
+          A BLOB! Here's some text describing this image, and more text just to show how positioning works.
+        </div>
+
+        <img class="section-image" src="gif-1.gif"></img>
+      </div>
+
+      <div class="section">
+        <div class="section-description">
+          A HEX! What would have thought!
+        </div>
+
+        <img class="section-image" src="gif-2.gif"></img>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Made by OFCourse
+  </div>
+</body>

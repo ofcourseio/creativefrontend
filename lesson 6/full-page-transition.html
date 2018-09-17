@@ -1,0 +1,99 @@
+<head>
+  <style>
+    body {
+      margin: 0;
+      font-family: Helvetica;
+    }
+
+    .transition {
+      position: absolute;
+      height: 100%;
+      width: 1000px;
+      background-color: #E8BF56;
+
+      transform: translate(-700px, 0);
+    }
+
+    .transition.animate {
+      animation-name: transition-animation;
+      animation-duration: 2s;
+      animation-timing-function: ease-in-out;
+    }
+
+    @keyframes transition-animation {
+      0%   { transform: translate(-700px, 0); z-index: 0   }
+      25%  { transform: translate(-900px, 0); z-index: 0   }
+      26%  { transform: translate(-900px, 0); z-index: 100 }
+      50%  { transform: translate(0px,    0); z-index: 100 }
+      75%  { transform: translate(-900px, 0); z-index: 100 }
+      76%  { transform: translate(-900px, 0); z-index: 0   }
+      100% { transform: translate(-700px, 0); z-index: 0   }
+    }
+
+    .content-info,
+    .content-intro {
+      padding-top: 200px;
+      padding-left: 200px;
+      color: #452632;
+
+      position: relative;
+      z-index: 10;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="transition"></div>
+
+  <div class="content-intro">
+    <h1>OFCourse Intro</h1>
+    <button class="next">next</button>
+  </div>
+
+  <div class="content-info hidden">
+    <h1>Here's some info</h1>
+    <button class="back">back</button>
+  </div>
+
+  <script>
+    var nextBtnEl = document.querySelector(".next")
+    var backBtnEl = document.querySelector(".back")
+    var transitionEl = document.querySelector(".transition")
+
+    var infoEl = document.querySelector(".content-info")
+    var introEl = document.querySelector(".content-intro")
+
+    function showInfoEl() {
+      infoEl.className = "content-info"
+      introEl.className = "content-intro hidden"
+    }
+
+    function showIntroEl() {
+      introEl.className = "content-intro"
+      infoEl.className = "content-info hidden"
+    }
+
+    function resetTransition() {
+      transitionEl.className = "transition"
+    }
+
+    function transitionToInfo() {
+      transitionEl.className = "transition animate"
+      setTimeout(showInfoEl, 1000)
+      setTimeout(resetTransition, 2000)
+    }
+
+    function transitionToIntro() {
+      transitionEl.className = "transition animate"
+      setTimeout(showIntroEl, 1000)
+      setTimeout(resetTransition, 2000)
+    }
+
+    nextBtnEl.addEventListener("click", transitionToInfo)
+    backBtnEl.addEventListener("click", transitionToIntro)
+  </script>
+</body>
